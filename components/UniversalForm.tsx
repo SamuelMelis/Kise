@@ -10,7 +10,7 @@ interface UniversalFormProps {
 const UniversalForm: React.FC<UniversalFormProps> = ({ type, onAdd, exchangeRate }) => {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState<'USD' | 'ETB'>('ETB'); // Default to ETB for convenience
+  const [currency, setCurrency] = useState<'USD' | 'ETB'>('USD'); // Default to USD
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
