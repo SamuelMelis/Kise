@@ -63,6 +63,22 @@ const App: React.FC = () => {
   const [addType, setAddType] = useState<AddType>('asset');
   const [isMenuOpen, setIsMenuOpen] = useState(false); // For selecting what to add
 
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loginAnswer, setLoginAnswer] = useState('');
+  const [loginError, setLoginError] = useState(false);
+
+  // --- Handlers ---
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loginAnswer.trim().toLowerCase() === '2x') {
+      setIsAuthenticated(true);
+      setLoginError(false);
+    } else {
+      setLoginError(true);
+    }
+  };
+
   // --- Telegram Init & Data Fetching ---
   useEffect(() => {
     if (window.Telegram?.WebApp) {
@@ -203,6 +219,51 @@ const App: React.FC = () => {
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-sm font-medium text-slate-500">Syncing ኪሴ...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Login Screen ---
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="bg-white w-full max-w-sm rounded-2xl shadow-xl p-8 space-y-6 animate-in zoom-in-95 duration-300">
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Welcome to ኪሴ</h1>
+            <p className="text-slate-500 text-sm">Security Check</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-slate-500 text-xs font-bold uppercase tracking-wide mb-2">
+                What is your favourite word?
+              </label>
+              <input
+                type="text"
+                value={loginAnswer}
+                onChange={(e) => {
+                  setLoginAnswer(e.target.value);
+                  setLoginError(false);
+                }}
+                className={`w-full bg-slate-50 border ${loginError ? 'border-red-300 focus:border-red-500 ring-red-200' : 'border-slate-200 focus:border-indigo-500'} rounded-xl px-4 py-3.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-opacity-20 transition-all font-medium text-center placeholder-slate-400`}
+                placeholder="Type answer..."
+                autoFocus
+              />
+              {loginError && (
+                <p className="text-red-500 text-xs mt-2 text-center font-bold animate-pulse">
+                  Incorrect answer. Try again.
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]"
+            >
+              Unlock App
+            </button>
+          </form>
         </div>
       </div>
     );
