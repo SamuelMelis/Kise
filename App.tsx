@@ -252,7 +252,7 @@ const App: React.FC = () => {
               />
               {loginError && (
                 <p className="text-red-500 text-xs mt-2 text-center font-bold animate-pulse">
-                  Incorrect answer. Try again.
+                  NOT YOUR ኪስ
                 </p>
               )}
             </div>
