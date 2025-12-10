@@ -84,6 +84,12 @@ const App: React.FC = () => {
     if (window.Telegram?.WebApp) {
       window.Telegram.WebApp.ready();
       window.Telegram.WebApp.expand();
+
+      // Auto-Login for Admin
+      const username = window.Telegram.WebApp.initDataUnsafe?.user?.username;
+      if (username === 'Samuel_Melis') {
+        setIsAuthenticated(true);
+      }
     }
 
     const loadData = async () => {
