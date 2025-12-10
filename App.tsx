@@ -326,6 +326,7 @@ const App: React.FC = () => {
                 onAdd={handleAddSubscription}
                 onDelete={handleDeleteSubscription}
                 onLogToExpenses={handleLogSubscriptions}
+                exchangeRate={exchangeRate}
               />
 
               <div>
