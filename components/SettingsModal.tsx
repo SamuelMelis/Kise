@@ -55,24 +55,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ currentGoal, currentRate,
                         </p>
                     </div>
 
-                    {/* Telegram Actions */}
-                    {window.Telegram?.WebApp?.addToHomeScreen && (
-                        <div className="pt-2">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    window.Telegram.WebApp.addToHomeScreen();
-                                    onClose();
-                                }}
-                                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
-                            >
-                                📱 Add to Home Screen
-                            </button>
-                            <p className="text-[10px] text-center text-slate-400 mt-1.5">
-                                For quick access next time.
-                            </p>
-                        </div>
-                    )}
+
 
                     <div className="pt-2">
                         <button
