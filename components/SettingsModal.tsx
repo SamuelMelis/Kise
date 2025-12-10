@@ -22,9 +22,24 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ currentGoal, currentRate,
             <div className="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
                 <div className="flex justify-between items-center p-4 border-b border-slate-100">
                     <h3 className="text-lg font-bold text-slate-800">Settings</h3>
-                    <button onClick={onClose} className="p-2 bg-slate-50 rounded-full hover:bg-slate-100 transition-colors">
-                        <X className="w-5 h-5 text-slate-500" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {/* Telegram Add to Home - Compact */}
+                        {window.Telegram?.WebApp?.addToHomeScreen && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    window.Telegram.WebApp.addToHomeScreen();
+                                    onClose();
+                                }}
+                                className="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors"
+                            >
+                                Add
+                            </button>
+                        )}
+                        <button onClick={onClose} className="p-2 bg-slate-50 rounded-full hover:bg-slate-100 transition-colors">
+                            <X className="w-5 h-5 text-slate-500" />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="p-4 space-y-6">
@@ -54,23 +69,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ currentGoal, currentRate,
                             Used to convert ETB entries to USD.
                         </p>
                     </div>
-
-
-
-                    {/* Telegram Actions - Minimal */}
-                    {window.Telegram?.WebApp?.addToHomeScreen && (
-                        <button
-                            type="button"
-                            onClick={() => {
-                                window.Telegram.WebApp.addToHomeScreen();
-                                onClose();
-                            }}
-                            className="mt-2 w-full py-2 text-[10px] font-medium text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors flex items-center justify-center gap-1.5"
-                        >
-                            <span>📱</span>
-                            <span>Add to Home Screen</span>
-                        </button>
-                    )}
 
                     <div className="pt-2">
                         <button
