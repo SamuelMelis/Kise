@@ -29,10 +29,16 @@ const CATEGORY_ICONS: Record<Category, React.ElementType> = {
 export const ExpensesTab: React.FC = () => {
   const { expenses, addExpense, settings, deleteExpense, setIsInputActive } = useFinance();
   const [isAdding, setIsAdding] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   const toggleAdding = (value: boolean) => {
     setIsAdding(value);
-    setIsInputActive(value);
+    setIsInputActive(value || !!selectedDay);
+  };
+
+  const toggleDayDetails = (day: string | null) => {
+    setSelectedDay(day);
+    setIsInputActive(!!day || isAdding);
   };
 
   // Form State
@@ -206,58 +212,121 @@ export const ExpensesTab: React.FC = () => {
       )}
 
       {/* Expense List */}
-      <div className="space-y-10">
+      <div className="space-y-4">
         {groupedExpenses.map(([day, dayExpenses]) => {
           const isToday = day === new Date().toISOString().split('T')[0];
+          const dailyTotal = dayExpenses.reduce((sum, e) => sum + e.amount, 0);
+          const topCategories = Array.from(new Set(dayExpenses.map(e => e.category))).slice(0, 3);
 
           return (
-            <div key={day}>
-              <div className="flex items-center gap-4 mb-4">
-                <h4 className={`text-sm font-bold uppercase tracking-widest ${isToday ? 'text-[#18181b]' : 'text-gray-400'}`}>
-                  {new Date(day).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
-                </h4>
-                <div className="h-px bg-gray-100 flex-1"></div>
+            <div
+              key={day}
+              onClick={() => toggleDayDetails(day)}
+              className="bg-white border border-gray-100 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all active:scale-[0.98] cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${isToday ? 'bg-[#18181b]' : 'bg-gray-200'}`} />
+                  <h4 className={`text-xs font-bold uppercase tracking-widest ${isToday ? 'text-[#18181b]' : 'text-gray-400'}`}>
+                    {new Date(day).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
+                  </h4>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-bold text-[#18181b] tracking-tight">{dailyTotal.toLocaleString()} <span className="text-[10px] text-gray-400 font-mono ml-0.5">ETB</span></div>
+                </div>
               </div>
 
-              <div className="space-y-4">
-                {dayExpenses.map((expense) => {
+              <div className="flex items-center justify-between">
+                <div className="flex -space-x-2">
+                  {topCategories.map((cat, i) => {
+                    const Icon = CATEGORY_ICONS[cat as Category] || Layers;
+                    return (
+                      <div key={i} className="w-8 h-8 rounded-full bg-gray-50 border-2 border-white flex items-center justify-center text-[#18181b] shadow-sm">
+                        <Icon size={12} />
+                      </div>
+                    );
+                  })}
+                  {dayExpenses.length > 3 && (
+                    <div className="w-8 h-8 rounded-full bg-[#18181b] border-2 border-white flex items-center justify-center text-white text-[10px] font-bold">
+                      +{dayExpenses.length - 3}
+                    </div>
+                  )}
+                </div>
+                <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest group-hover:text-[#18181b] transition-colors">
+                  View Details
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Day Details Modal */}
+        {selectedDay && (
+          <div className="fixed inset-0 z-[70] bg-[#18181b]/20 backdrop-blur-sm animate-in fade-in duration-300 flex items-end justify-center">
+            <div className="w-full max-w-md bg-white rounded-t-[40px] p-8 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom duration-500 shadow-2xl pb-12">
+              <div className="flex justify-between items-center mb-8">
+                <div>
+                  <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">
+                    {selectedDay === new Date().toISOString().split('T')[0] ? 'Today' : new Date(selectedDay).toLocaleDateString('en-US', { weekday: 'long' })}
+                  </h3>
+                  <h2 className="text-2xl font-bold tracking-tight text-[#18181b]">
+                    {new Date(selectedDay).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => toggleDayDetails(null)}
+                  className="w-12 h-12 rounded-full bg-gray-50 text-[#18181b] flex items-center justify-center hover:bg-gray-100 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {groupedExpenses.find(g => g[0] === selectedDay)?.[1].map((expense) => {
                   const Icon = CATEGORY_ICONS[expense.category] || Layers;
+                  const isToday = selectedDay === new Date().toISOString().split('T')[0];
+
                   return (
-                    <div key={expense.id} className="group relative bg-white flex items-center justify-between p-2 rounded-xl transition-all">
+                    <div key={expense.id} className="flex items-center justify-between border-b border-gray-50 pb-6 mb-6 last:border-0 last:pb-0">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-[#18181b] border border-gray-100 group-hover:border-[#18181b] transition-colors">
+                        <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-[#18181b]">
                           <Icon size={20} strokeWidth={1.5} />
                         </div>
                         <div>
                           <div className="font-bold text-[#18181b] text-sm">{expense.category}</div>
-                          <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider flex items-center gap-1">
-                            {expense.isRecurring && <Repeat size={10} className="text-[#18181b]" />}
-                            <span>
-                              {expense.note || (expense.isRecurring ? 'Recurring' : 'One-time')}
-                            </span>
+                          <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                            {expense.note || 'No description'}
                           </div>
                         </div>
                       </div>
-
                       <div className="flex items-center gap-4">
                         <div className="text-right">
-                          <div className="font-bold text-[#18181b] text-sm">{expense.amount.toLocaleString()}</div>
-                          <div className="text-[10px] text-gray-400 font-mono">ETB</div>
+                          <div className="font-bold text-[#18181b] text-base">{expense.amount.toLocaleString()} <span className="text-[9px] text-gray-300 font-semibold uppercase">ETB</span></div>
                         </div>
-                        <button
-                          onClick={() => deleteExpense(expense.id)}
-                          className="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-[#18181b] hover:bg-gray-100 rounded-full transition-all"
-                        >
-                          <X size={14} />
-                        </button>
+                        {isToday && (
+                          <button
+                            onClick={() => {
+                              if (window.confirm('Delete this entry?')) {
+                                deleteExpense(expense.id);
+                                // If last expense of the day deleted, close modal
+                                if (groupedExpenses.find(g => g[0] === selectedDay)?.[1].length === 1) {
+                                  toggleDayDetails(null);
+                                }
+                              }
+                            }}
+                            className="w-10 h-10 flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
+                          >
+                            <X size={16} />
+                          </button>
+                        )}
                       </div>
                     </div>
                   );
                 })}
               </div>
             </div>
-          );
-        })}
+          </div>
+        )}
 
         {groupedExpenses.length === 0 && !isAdding && (
           <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-gray-100 rounded-3xl m-4">
@@ -266,6 +335,6 @@ export const ExpensesTab: React.FC = () => {
           </div>
         )}
       </div>
-    </div >
+    </div>
   );
 };
