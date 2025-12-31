@@ -103,40 +103,40 @@ export const ExpensesTab: React.FC = () => {
 
       {/* Add Expense Form */}
       {isAdding && (
-        <div className="fixed inset-0 z-[60] bg-white p-6 overflow-y-auto animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[60] bg-white p-4 overflow-y-auto animate-in fade-in duration-200">
           <div className="max-w-md mx-auto">
-            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-xl font-bold tracking-tight text-[#18181b]">New Entry</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold tracking-tight text-[#18181b]">New Expense</h3>
               <button
                 onClick={() => toggleAdding(false)}
-                className="w-10 h-10 rounded-full bg-gray-100 text-[#18181b] flex items-center justify-center hover:bg-gray-200 transition-colors"
+                className="w-8 h-8 rounded-full bg-gray-100 text-[#18181b] flex items-center justify-center hover:bg-gray-200 transition-colors"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {/* Amount Input */}
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Amount (ETB)</label>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Amount (ETB)</label>
                 <input
                   type="number"
                   value={amount}
                   onChange={e => setAmount(e.target.value)}
-                  className="w-full text-5xl font-bold tracking-tighter py-2 border-b border-gray-200 focus:border-[#18181b] outline-none bg-transparent placeholder-gray-200 text-[#18181b] font-mono"
+                  className="w-full text-4xl font-bold tracking-tighter py-1 border-b border-gray-200 focus:border-[#18181b] outline-none bg-transparent placeholder-gray-200 text-[#18181b] font-mono"
                   placeholder="0"
                   autoFocus
                   required
                 />
-                <div className="flex items-center gap-2 mt-3 text-sm text-gray-400 font-medium">
+                <div className="flex items-center gap-2 mt-2 text-xs text-gray-400 font-medium">
                   <span>≈ ${(amount ? (parseFloat(amount) / settings.exchangeRate) : 0).toFixed(2)} USD</span>
                 </div>
               </div>
 
               {/* Category Grid */}
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Category</label>
-                <div className="grid grid-cols-3 gap-3">
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 text-center">Select Category</label>
+                <div className="grid grid-cols-4 gap-2">
                   {CATEGORIES.map(cat => {
                     const Icon = CATEGORY_ICONS[cat.value as Category];
                     const isSelected = category === cat.value;
@@ -145,13 +145,13 @@ export const ExpensesTab: React.FC = () => {
                         key={cat.value}
                         type="button"
                         onClick={() => setCategory(cat.value as Category)}
-                        className={`h-20 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all border-2 ${isSelected
-                          ? 'bg-[#18181b] text-white border-[#18181b] shadow-lg scale-[1.02]'
+                        className={`h-16 rounded-xl flex flex-col items-center justify-center gap-1 transition-all border-2 ${isSelected
+                          ? 'bg-[#18181b] text-white border-[#18181b] shadow-md scale-[1.02]'
                           : 'bg-white text-gray-400 border-gray-100 hover:border-gray-300'
                           }`}
                       >
-                        <Icon size={20} strokeWidth={isSelected ? 2 : 1.5} />
-                        <span className="text-[10px] font-bold uppercase tracking-widest">{cat.label}</span>
+                        <Icon size={16} strokeWidth={isSelected ? 2 : 1.5} />
+                        <span className="text-[9px] font-bold uppercase tracking-tight">{cat.label}</span>
                       </button>
                     );
                   })}
@@ -159,24 +159,24 @@ export const ExpensesTab: React.FC = () => {
               </div>
 
               {/* Details */}
-              <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Date & Note</label>
-                  <div className="flex gap-3">
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Date & Note</label>
+                  <div className="flex gap-2">
                     <div className="relative flex-1">
                       <input
                         type="date"
                         value={date}
                         onChange={e => setDate(e.target.value)}
-                        className="w-full h-14 pl-4 pr-3 bg-gray-50 rounded-xl text-sm font-bold text-[#18181b] border-none focus:ring-2 focus:ring-[#18181b]/5 outline-none"
+                        className="w-full h-12 pl-3 pr-2 bg-gray-50 rounded-xl text-xs font-bold text-[#18181b] border-none focus:ring-2 focus:ring-[#18181b]/5 outline-none"
                       />
                     </div>
                     <input
                       type="text"
                       value={note}
                       onChange={e => setNote(e.target.value)}
-                      placeholder="Note (Optional)"
-                      className="flex-[1.5] h-14 pl-4 bg-gray-50 rounded-xl text-sm font-medium text-[#18181b] border-none focus:ring-2 focus:ring-[#18181b]/5 outline-none placeholder-gray-400"
+                      placeholder="Note"
+                      className="flex-[1.5] h-12 pl-3 bg-gray-50 rounded-xl text-xs font-medium text-[#18181b] border-none focus:ring-2 focus:ring-[#18181b]/5 outline-none placeholder-gray-400"
                     />
                   </div>
                 </div>
@@ -184,17 +184,17 @@ export const ExpensesTab: React.FC = () => {
                 {settings.recurringEnabled && (
                   <div
                     onClick={() => setIsRecurring(!isRecurring)}
-                    className={`p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${isRecurring ? 'bg-[#18181b] border-[#18181b] text-white' : 'bg-white border-gray-200 text-gray-500'}`}
+                    className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${isRecurring ? 'bg-[#18181b] border-[#18181b] text-white' : 'bg-white border-gray-200 text-gray-500'}`}
                   >
-                    <span className="text-sm font-bold">Recurring Monthly</span>
-                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${isRecurring ? 'border-white bg-white' : 'border-gray-300'}`}>
-                      {isRecurring && <div className="w-2.5 h-2.5 rounded-full bg-[#18181b]" />}
+                    <span className="text-xs font-bold uppercase tracking-tight">Recurring Monthly</span>
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${isRecurring ? 'border-white bg-white' : 'border-gray-300'}`}>
+                      {isRecurring && <div className="w-2 h-2 rounded-full bg-[#18181b]" />}
                     </div>
                   </div>
                 )}
               </div>
 
-              <button type="submit" className="w-full bg-gradient-to-br from-[#18181b] to-[#27272a] text-white py-5 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-gray-900 transition-colors shadow-xl mb-16">
+              <button type="submit" className="w-full bg-gradient-to-br from-[#18181b] to-[#27272a] text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-gray-900 transition-colors shadow-lg">
                 Add Expense
               </button>
             </form>
@@ -263,6 +263,6 @@ export const ExpensesTab: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
