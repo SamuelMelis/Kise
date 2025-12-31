@@ -9,7 +9,8 @@ import {
   Home,
   Wifi,
   Coffee,
-  Layers
+  Layers,
+  Package
 } from 'lucide-react';
 import { Category } from '../types';
 
@@ -19,6 +20,8 @@ const CATEGORY_ICONS: Record<Category, React.ElementType> = {
   Rent: Home,
   Internet: Wifi,
   Entertainment: Coffee,
+  Coffee: Coffee,
+  Item: Package,
   Other: Layers,
 };
 
