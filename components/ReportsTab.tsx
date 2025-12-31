@@ -98,16 +98,17 @@ export const ReportsTab: React.FC = () => {
         </h3>
 
         {categoryData.length > 0 ? (
-          <>
-            <div className="h-64 w-full relative">
+          <div className="flex items-center gap-4">
+            {/* Pie Chart Left */}
+            <div className="h-48 w-1/2 relative">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={categoryData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
+                    innerRadius={50}
+                    outerRadius={70}
                     paddingAngle={4}
                     dataKey="value"
                     stroke="none"
@@ -128,25 +129,18 @@ export const ReportsTab: React.FC = () => {
                   />
                 </PieChart>
               </ResponsiveContainer>
-              {/* Center Label */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-3xl font-bold tracking-tighter text-[#18181b]">{categoryData.length}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Cats</span>
-              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-x-4 gap-y-3 mt-6">
+            {/* Vertical Legend Right */}
+            <div className="w-1/2 flex flex-col gap-3">
               {categoryData.map((entry, index) => (
-                <div key={entry.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                    <span className="text-xs font-semibold text-gray-600">{entry.name}</span>
-                  </div>
-                  <span className="text-xs font-bold text-[#18181b] font-mono">{entry.value.toLocaleString()}</span>
+                <div key={entry.name} className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest truncate">{entry.name}</span>
                 </div>
               ))}
             </div>
-          </>
+          </div>
         ) : (
           <div className="h-48 flex items-center justify-center text-gray-400 text-xs font-bold uppercase tracking-widest border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/50">
             No Expense Data
