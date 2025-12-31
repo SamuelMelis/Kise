@@ -9,6 +9,8 @@ import { LayoutDashboard, Wallet, PiggyBank, BarChart3, Settings } from 'lucide-
 
 type Tab = 'dashboard' | 'expenses' | 'income' | 'reports' | 'settings';
 
+import { useFinance } from './context/FinanceContext';
+
 const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const { isInputActive } = useFinance();
@@ -82,6 +84,7 @@ const AppContent: React.FC = () => {
 
             </div>
           </nav>
+        )}
       </div>
     </div>
   );
