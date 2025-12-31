@@ -135,8 +135,11 @@ export const ReportsTab: React.FC = () => {
             <div className="flex flex-col gap-2.5 border-l border-gray-50 pl-6 py-2">
               {categoryData.map((entry, index) => (
                 <div key={entry.name} className="flex items-center gap-3 group transition-transform hover:translate-x-1">
-                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-sm" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{entry.name}</span>
+                  <div className="w-2 h-2 rounded-full flex-shrink-0 shadow-sm" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                  <div className="flex items-baseline gap-1.5 min-w-0">
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest truncate">{entry.name}</span>
+                    <span className="text-[9px] font-bold text-gray-300 font-mono">({entry.value.toLocaleString()})</span>
+                  </div>
                 </div>
               ))}
             </div>
