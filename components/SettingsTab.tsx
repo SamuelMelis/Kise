@@ -98,26 +98,20 @@ export const SettingsTab: React.FC = () => {
 
           <button
             onClick={() => {
-              const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
-              if (isStandalone) {
-                alert("NomadFinance is already installed on your home screen!");
-                return;
-              }
-
-              const isTelegram = (window as any).Telegram?.WebApp?.initData !== "";
-              const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-
               const promptEvent = (window as any).deferredPrompt;
 
               if (promptEvent) {
+                // If the browser already has the prompt ready, show it instantly
                 promptEvent.prompt();
                 (window as any).deferredPrompt = null;
-              } else if (isTelegram) {
-                alert("To add to Home Screen:\n\n1. Tap the three dots (⋮) in the top right corner.\n2. Tap 'Add to Home Screen'.");
-              } else if (isIOS) {
-                alert("To add to Home Screen:\n\n1. Tap the 'Share' button at the bottom.\n2. Scroll down and tap 'Add to Home Screen'.");
               } else {
-                alert("To add to Home Screen:\n\nOpen this app in your browser (Chrome/Safari) directly, then use the browser's 'Add to Home Screen' menu.");
+                const isTelegram = (window as any).Telegram?.WebApp?.initData !== "";
+                if (isTelegram) {
+                  // Inside Telegram internal browser, native install is blocked.
+                  // By opening in external browser, Chrome/Safari can then trigger the install prompt.
+                  const url = window.location.href;
+                  (window as any).Telegram?.WebApp?.openLink(url);
+                }
               }
             }}
             className="bg-white text-[#18181b] px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors"
