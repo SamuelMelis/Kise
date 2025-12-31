@@ -176,6 +176,8 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     await supabase.from('assets').delete().eq('id', id);
   };
 
+  const [isInputActive, setIsInputActive] = useState(false);
+
   const updateSettings = async (newSettings: Partial<Settings>) => {
     if (!userId) return;
     setSettings(prev => ({ ...prev, ...newSettings }));
@@ -196,7 +198,9 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
       deleteIncome,
       addAsset,
       deleteAsset,
-      updateSettings
+      updateSettings,
+      isInputActive,
+      setIsInputActive
     }}>
       {children}
     </FinanceContext.Provider>

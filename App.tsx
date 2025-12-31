@@ -11,6 +11,7 @@ type Tab = 'dashboard' | 'expenses' | 'income' | 'reports' | 'settings';
 
 const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const { isInputActive } = useFinance();
 
   React.useEffect(() => {
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -40,46 +41,47 @@ const AppContent: React.FC = () => {
         </main>
 
         {/* Bottom Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-100 pb-8 pt-4 px-6 z-50 max-w-md mx-auto">
-          <div className="flex justify-between items-center">
+        {!isInputActive && (
+          <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-100 pb-8 pt-4 px-6 z-50 max-w-md mx-auto">
+            <div className="flex justify-between items-center">
 
-            <NavButton
-              active={activeTab === 'dashboard'}
-              onClick={() => setActiveTab('dashboard')}
-              icon={LayoutDashboard}
-              label="Overview"
-            />
+              <NavButton
+                active={activeTab === 'dashboard'}
+                onClick={() => setActiveTab('dashboard')}
+                icon={LayoutDashboard}
+                label="Overview"
+              />
 
-            <NavButton
-              active={activeTab === 'expenses'}
-              onClick={() => setActiveTab('expenses')}
-              icon={Wallet}
-              label="Spent"
-            />
+              <NavButton
+                active={activeTab === 'expenses'}
+                onClick={() => setActiveTab('expenses')}
+                icon={Wallet}
+                label="Spent"
+              />
 
-            <NavButton
-              active={activeTab === 'income'}
-              onClick={() => setActiveTab('income')}
-              icon={PiggyBank}
-              label="Earn"
-            />
+              <NavButton
+                active={activeTab === 'income'}
+                onClick={() => setActiveTab('income')}
+                icon={PiggyBank}
+                label="Earn"
+              />
 
-            <NavButton
-              active={activeTab === 'reports'}
-              onClick={() => setActiveTab('reports')}
-              icon={BarChart3}
-              label="Stats"
-            />
+              <NavButton
+                active={activeTab === 'reports'}
+                onClick={() => setActiveTab('reports')}
+                icon={BarChart3}
+                label="Stats"
+              />
 
-            <NavButton
-              active={activeTab === 'settings'}
-              onClick={() => setActiveTab('settings')}
-              icon={Settings}
-              label="Set"
-            />
+              <NavButton
+                active={activeTab === 'settings'}
+                onClick={() => setActiveTab('settings')}
+                icon={Settings}
+                label="Set"
+              />
 
-          </div>
-        </nav>
+            </div>
+          </nav>
       </div>
     </div>
   );

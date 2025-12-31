@@ -51,6 +51,8 @@ export interface FinanceContextType {
   addIncome: (income: Omit<Income, 'id'>) => void;
   deleteIncome: (id: string) => void;
   addAsset: (asset: Omit<Asset, 'id'>) => void;
-  deleteAsset: (id: string) => void;
-  updateSettings: (newSettings: Partial<Settings>) => void;
+  deleteAsset: (id: string) => Promise<void>;
+  updateSettings: (settings: Partial<Settings>) => Promise<void>;
+  isInputActive: boolean;
+  setIsInputActive: (active: boolean) => void;
 }

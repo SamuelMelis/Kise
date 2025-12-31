@@ -24,8 +24,13 @@ const CATEGORY_ICONS: Record<Category, React.ElementType> = {
 };
 
 export const ExpensesTab: React.FC = () => {
-  const { expenses, addExpense, settings, deleteExpense } = useFinance();
+  const { expenses, addExpense, settings, deleteExpense, setIsInputActive } = useFinance();
   const [isAdding, setIsAdding] = useState(false);
+
+  const toggleAdding = (value: boolean) => {
+    setIsAdding(value);
+    setIsInputActive(value);
+  };
 
   // Form State
   const [amount, setAmount] = useState('');
@@ -52,7 +57,7 @@ export const ExpensesTab: React.FC = () => {
     setAmount('');
     setNote('');
     setIsRecurring(false);
-    setIsAdding(false);
+    toggleAdding(false);
   };
 
   const groupedExpenses = useMemo(() => {
@@ -86,7 +91,7 @@ export const ExpensesTab: React.FC = () => {
       {/* Add Expense Button */}
       {!isAdding && (
         <button
-          onClick={() => setIsAdding(true)}
+          onClick={() => toggleAdding(true)}
           className="w-full bg-gradient-to-br from-[#18181b] to-[#27272a] text-white py-5 rounded-2xl font-bold text-sm uppercase tracking-widest shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-3 mb-10 group"
         >
           <span className="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center">
@@ -98,12 +103,12 @@ export const ExpensesTab: React.FC = () => {
 
       {/* Add Expense Form */}
       {isAdding && (
-        <div className="fixed inset-0 z-[60] bg-white/95 backdrop-blur-md p-6 overflow-y-auto animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[60] bg-white p-6 overflow-y-auto animate-in fade-in duration-200">
           <div className="max-w-md mx-auto">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-xl font-bold tracking-tight text-[#18181b]">New Entry</h3>
               <button
-                onClick={() => setIsAdding(false)}
+                onClick={() => toggleAdding(false)}
                 className="w-10 h-10 rounded-full bg-gray-100 text-[#18181b] flex items-center justify-center hover:bg-gray-200 transition-colors"
               >
                 <X size={20} />
