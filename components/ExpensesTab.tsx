@@ -10,13 +10,15 @@ import {
   Wifi,
   Coffee,
   Layers,
-  Repeat
+  Repeat,
+  Package
 } from 'lucide-react';
 import { Category } from '../types';
 
 const CATEGORY_ICONS: Record<Category, React.ElementType> = {
   Food: Utensils,
   Coffee: Coffee,
+  Item: Package,
   Transport: Car,
   Rent: Home,
   Internet: Wifi,

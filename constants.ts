@@ -3,6 +3,7 @@ import { Expense, Income, Settings, Asset } from './types';
 export const CATEGORIES: { label: string; value: string }[] = [
   { label: 'Food', value: 'Food' },
   { label: 'Coffee', value: 'Coffee' },
+  { label: 'Item', value: 'Item' },
   { label: 'Transport', value: 'Transport' },
   { label: 'Rent', value: 'Rent' },
   { label: 'Internet', value: 'Internet' },

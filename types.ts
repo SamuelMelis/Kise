@@ -1,6 +1,6 @@
 export type Currency = 'USD' | 'ETB';
 
-export type Category = 'Food' | 'Transport' | 'Rent' | 'Internet' | 'Entertainment' | 'Coffee' | 'Other';
+export type Category = 'Food' | 'Transport' | 'Rent' | 'Internet' | 'Entertainment' | 'Coffee' | 'Item' | 'Other';
 
 export interface Expense {
   id: string;
