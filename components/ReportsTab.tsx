@@ -98,21 +98,21 @@ export const ReportsTab: React.FC = () => {
         </h3>
 
         {categoryData.length > 0 ? (
-          <div className="flex items-center gap-4">
+          <div className="grid grid-cols-[1.1fr_0.9fr] items-center gap-6 pr-4">
             {/* Pie Chart Left */}
-            <div className="h-48 w-1/2 relative">
+            <div className="h-44 w-full relative">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={categoryData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={50}
-                    outerRadius={70}
-                    paddingAngle={4}
+                    innerRadius={45}
+                    outerRadius={65}
+                    paddingAngle={3}
                     dataKey="value"
                     stroke="none"
-                    cornerRadius={6}
+                    cornerRadius={8}
                   >
                     {categoryData.map((entry, index) => (
                       <Cell
@@ -124,7 +124,7 @@ export const ReportsTab: React.FC = () => {
                   </Pie>
                   <Tooltip
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', backgroundColor: 'white', color: '#18181b', padding: '12px' }}
-                    itemStyle={{ color: '#18181b', fontWeight: 'bold', fontSize: '12px' }}
+                    itemStyle={{ color: '#18181b', fontWeight: 'bold', fontSize: '11px' }}
                     formatter={(value: number) => [`${value.toLocaleString()} ETB`, '']}
                   />
                 </PieChart>
@@ -132,11 +132,11 @@ export const ReportsTab: React.FC = () => {
             </div>
 
             {/* Vertical Legend Right */}
-            <div className="w-1/2 flex flex-col gap-3">
+            <div className="flex flex-col gap-2.5 border-l border-gray-50 pl-6 py-2">
               {categoryData.map((entry, index) => (
-                <div key={entry.name} className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest truncate">{entry.name}</span>
+                <div key={entry.name} className="flex items-center gap-3 group transition-transform hover:translate-x-1">
+                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-sm" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{entry.name}</span>
                 </div>
               ))}
             </div>
