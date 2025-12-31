@@ -61,8 +61,17 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
           .select('*')
           .eq('user_id', userId)
           .single();
-        if (settingsData) setSettings({ ...settingsData, monthly_budget: Number(settingsData.monthly_budget) });
-        else await supabase.from('settings').upsert({ user_id: userId, ...INITIAL_SETTINGS }); // Init settings if missing
+        if (settingsData) {
+          const loadedSettings = { ...settingsData, monthly_budget: Number(settingsData.monthly_budget) };
+          setSettings(loadedSettings);
+
+          // Migration: Update legacy 115 rate to new 180 default for existing users
+          if (loadedSettings.exchangeRate === 115.0) {
+            updateSettings({ exchangeRate: 180.0 });
+          }
+        } else {
+          await supabase.from('settings').upsert({ user_id: userId, ...INITIAL_SETTINGS }); // Init settings if missing
+        }
 
       } catch (error) {
         console.error('Error loading data:', error);
@@ -180,8 +189,13 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const updateSettings = async (newSettings: Partial<Settings>) => {
     if (!userId) return;
-    setSettings(prev => ({ ...prev, ...newSettings }));
-    await supabase.from('settings').upsert({ user_id: userId, ...settings, ...newSettings });
+    setSettings(prev => {
+      const updated = { ...prev, ...newSettings };
+      supabase.from('settings').upsert({ user_id: userId, ...updated }).then(({ error }) => {
+        if (error) console.error('Error updating settings:', error);
+      });
+      return updated;
+    });
   };
 
   return (
