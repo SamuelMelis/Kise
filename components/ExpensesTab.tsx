@@ -98,7 +98,7 @@ export const ExpensesTab: React.FC = () => {
 
       {/* Add Expense Form */}
       {isAdding && (
-        <div className="fixed inset-0 z-50 bg-white/95 backdrop-blur-md p-6 overflow-y-auto animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[60] bg-white/95 backdrop-blur-md p-6 overflow-y-auto animate-in fade-in duration-200">
           <div className="max-w-md mx-auto">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-xl font-bold tracking-tight text-[#18181b]">New Entry</h3>
@@ -140,12 +140,12 @@ export const ExpensesTab: React.FC = () => {
                         key={cat.value}
                         type="button"
                         onClick={() => setCategory(cat.value as Category)}
-                        className={`h-24 rounded-2xl flex flex-col items-center justify-center gap-3 transition-all border-2 ${isSelected
+                        className={`h-20 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all border-2 ${isSelected
                           ? 'bg-[#18181b] text-white border-[#18181b] shadow-lg scale-[1.02]'
                           : 'bg-white text-gray-400 border-gray-100 hover:border-gray-300'
                           }`}
                       >
-                        <Icon size={24} strokeWidth={isSelected ? 2 : 1.5} />
+                        <Icon size={20} strokeWidth={isSelected ? 2 : 1.5} />
                         <span className="text-[10px] font-bold uppercase tracking-widest">{cat.label}</span>
                       </button>
                     );
