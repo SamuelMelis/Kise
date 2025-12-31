@@ -16,6 +16,7 @@ import { Category } from '../types';
 
 const CATEGORY_ICONS: Record<Category, React.ElementType> = {
   Food: Utensils,
+  Coffee: Coffee,
   Transport: Car,
   Rent: Home,
   Internet: Wifi,
