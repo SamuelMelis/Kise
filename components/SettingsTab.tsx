@@ -98,13 +98,21 @@ export const SettingsTab: React.FC = () => {
 
           <button
             onClick={() => {
+              const isTelegram = (window as any).Telegram?.WebApp?.initData !== "";
+              const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
               // Check for deferred prompt
               const promptEvent = (window as any).deferredPrompt;
+
               if (promptEvent) {
                 promptEvent.prompt();
                 (window as any).deferredPrompt = null;
+              } else if (isTelegram) {
+                alert("To add to Home Screen:\n\n1. Tap the three dots (⋮) in the top right corner.\n2. Tap 'Add to Home Screen'.");
+              } else if (isIOS) {
+                alert("To add to Home Screen:\n\n1. Tap the 'Share' button at the bottom.\n2. Scroll down and tap 'Add to Home Screen'.");
               } else {
-                alert("To add to Home Screen:\n\nPut this page in your browser (Chrome/Safari)\nThen tap 'Share' -> 'Add to Home Screen'");
+                alert("To add to Home Screen:\n\nOpen this app in your browser (Chrome/Safari) directly, then use the browser's 'Add to Home Screen' menu.");
               }
             }}
             className="bg-white text-[#18181b] px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors"
