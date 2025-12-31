@@ -98,10 +98,15 @@ export const SettingsTab: React.FC = () => {
 
           <button
             onClick={() => {
+              const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+              if (isStandalone) {
+                alert("NomadFinance is already installed on your home screen!");
+                return;
+              }
+
               const isTelegram = (window as any).Telegram?.WebApp?.initData !== "";
               const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
 
-              // Check for deferred prompt
               const promptEvent = (window as any).deferredPrompt;
 
               if (promptEvent) {
