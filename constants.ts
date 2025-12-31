@@ -12,7 +12,7 @@ export const CATEGORIES: { label: string; value: string }[] = [
 ];
 
 export const INITIAL_SETTINGS: Settings = {
-  exchangeRate: 115.0,
+  exchangeRate: 180.0,
   savingsGoalUSD: 10000,
   recurringEnabled: true,
   userName: 'Freelancer',
