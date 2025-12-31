@@ -12,40 +12,45 @@ export const AuthWrapper: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     const initAuth = async () => {
-      // 1. Get Telegram User
-      let telegramUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+      try {
+        // 1. Get Telegram User
+        let telegramUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
 
-      // Local dev fallback
-      if (!telegramUser && window.location.hostname === 'localhost') {
-        telegramUser = {
-          id: 123456789,
-          first_name: 'Dev',
-          last_name: 'User',
-          username: 'dev_user'
-        };
-      }
-
-      if (telegramUser?.id) {
-        const userIdStr = telegramUser.id.toString();
-
-        // 2. Check User in DB
-        const { data: user, error } = await supabase
-          .from('users')
-          .select('password')
-          .eq('id', userIdStr)
-          .single();
-
-        if (error || !user || !user.password) {
-          // New User needing registration
-          setNeedsRegistration(true);
-          window.tempTelegramUser = telegramUser; // Save for registration
-        } else {
-          // User exists and has password -> Auto-Login per request "dont ask again"
-          setUserId(userIdStr);
-          setIsAuthorized(true);
+        // Local dev fallback
+        if (!telegramUser && window.location.hostname === 'localhost') {
+          telegramUser = {
+            id: 123456789,
+            first_name: 'Dev',
+            last_name: 'User',
+            username: 'dev_user'
+          };
         }
+
+        if (telegramUser?.id) {
+          const userIdStr = telegramUser.id.toString();
+
+          // 2. Check User in DB
+          const { data: user, error } = await supabase
+            .from('users')
+            .select('password')
+            .eq('id', userIdStr)
+            .single();
+
+          if (error || !user || !user.password) {
+            // New User needing registration
+            setNeedsRegistration(true);
+            window.tempTelegramUser = telegramUser; // Save for registration
+          } else {
+            // User exists and has password -> Auto-Login per request "dont ask again"
+            setUserId(userIdStr);
+            setIsAuthorized(true);
+          }
+        }
+      } catch (err) {
+        console.error("Auth init error:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     initAuth();

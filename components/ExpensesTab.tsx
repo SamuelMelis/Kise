@@ -282,7 +282,7 @@ export const ExpensesTab: React.FC = () => {
               </div>
 
               <div className="space-y-6">
-                {groupedExpenses.find(g => g[0] === selectedDay)?.[1].map((expense) => {
+                {groupedExpenses.find(g => g[0] === selectedDay)?.[1]?.map((expense) => {
                   const Icon = CATEGORY_ICONS[expense.category] || Layers;
                   const isToday = selectedDay === new Date().toISOString().split('T')[0];
 
