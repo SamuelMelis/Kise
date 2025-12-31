@@ -109,6 +109,20 @@ export const AuthWrapper: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   }
 
+  if (!isAuthorized && !needsRegistration) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center p-6 bg-[#18181b] text-white">
+        <h2 className="text-xl font-bold mb-4">Open in Telegram</h2>
+        <p className="text-gray-400 text-center text-sm mb-6">
+          NomadFinance is designed as a Telegram Mini App. Please open it using your Telegram bot.
+        </p>
+        <div className="p-4 bg-white/10 rounded-xl">
+          <span className="text-xs font-mono text-gray-300">@{window.location.hostname}</span>
+        </div>
+      </div>
+    );
+  }
+
   return isAuthorized ? <>{children}</> : null;
 };
 
