@@ -4,7 +4,8 @@ export type Category = 'Food' | 'Transport' | 'Rent' | 'Internet' | 'Entertainme
 
 export interface Expense {
   id: string;
-  amountETB: number;
+  title: string;
+  amount: number;
   category: Category;
   date: string; // ISO date string YYYY-MM-DD
   isRecurring: boolean;
@@ -14,19 +15,20 @@ export interface Expense {
 
 export interface Income {
   id: string;
-  amountUSD: number;
+  amount: number;
   source: string;
   date: string;
   type: 'Stable' | 'Variable';
 }
 
-export type AssetType = 'Cash' | 'Crypto' | 'Stock' | 'Real Estate' | 'Other';
+export type AssetType = 'Cash' | 'Crypto' | 'Stock' | 'Real Estate' | 'Debt' | 'Other';
 
 export interface Asset {
   id: string;
   name: string;
-  amountUSD: number;
+  amount: number;
   type: AssetType;
+  currency: Currency;
 }
 
 export interface Settings {
@@ -34,9 +36,12 @@ export interface Settings {
   savingsGoalUSD: number;
   recurringEnabled: boolean;
   userName: string;
+  monthly_budget: number; // Matched DB column
+  theme: 'light' | 'dark';
 }
 
 export interface FinanceContextType {
+  userId: string | null;
   expenses: Expense[];
   incomes: Income[];
   assets: Asset[];

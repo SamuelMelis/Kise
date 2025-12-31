@@ -12,6 +12,13 @@ type Tab = 'dashboard' | 'expenses' | 'income' | 'reports' | 'settings';
 const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
 
+  React.useEffect(() => {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      (window as any).deferredPrompt = e;
+    });
+  }, []);
+
   const renderTab = () => {
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
@@ -26,7 +33,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-white text-[#18181b] font-sans selection:bg-[#18181b] selection:text-white">
       <div className="max-w-md mx-auto min-h-screen relative bg-white border-x border-gray-50 shadow-2xl">
-        
+
         {/* Main Content Area */}
         <main className="px-6 pt-10 min-h-screen">
           {renderTab()}
@@ -35,42 +42,42 @@ const AppContent: React.FC = () => {
         {/* Bottom Navigation */}
         <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-100 pb-8 pt-4 px-6 z-50 max-w-md mx-auto">
           <div className="flex justify-between items-center">
-            
-            <NavButton 
-              active={activeTab === 'dashboard'} 
-              onClick={() => setActiveTab('dashboard')} 
-              icon={LayoutDashboard} 
-              label="Overview" 
-            />
-            
-            <NavButton 
-              active={activeTab === 'expenses'} 
-              onClick={() => setActiveTab('expenses')} 
-              icon={Wallet} 
-              label="Spent" 
-            />
-            
-            <NavButton 
-              active={activeTab === 'income'} 
-              onClick={() => setActiveTab('income')} 
-              icon={PiggyBank} 
-              label="Earn" 
-            />
-            
-            <NavButton 
-              active={activeTab === 'reports'} 
-              onClick={() => setActiveTab('reports')} 
-              icon={BarChart3} 
-              label="Stats" 
+
+            <NavButton
+              active={activeTab === 'dashboard'}
+              onClick={() => setActiveTab('dashboard')}
+              icon={LayoutDashboard}
+              label="Overview"
             />
 
-            <NavButton 
-              active={activeTab === 'settings'} 
-              onClick={() => setActiveTab('settings')} 
-              icon={Settings} 
-              label="Set" 
+            <NavButton
+              active={activeTab === 'expenses'}
+              onClick={() => setActiveTab('expenses')}
+              icon={Wallet}
+              label="Spent"
             />
-            
+
+            <NavButton
+              active={activeTab === 'income'}
+              onClick={() => setActiveTab('income')}
+              icon={PiggyBank}
+              label="Earn"
+            />
+
+            <NavButton
+              active={activeTab === 'reports'}
+              onClick={() => setActiveTab('reports')}
+              icon={BarChart3}
+              label="Stats"
+            />
+
+            <NavButton
+              active={activeTab === 'settings'}
+              onClick={() => setActiveTab('settings')}
+              icon={Settings}
+              label="Set"
+            />
+
           </div>
         </nav>
       </div>
@@ -79,21 +86,25 @@ const AppContent: React.FC = () => {
 };
 
 const NavButton: React.FC<{ active: boolean; onClick: () => void; icon: React.ElementType; label: string }> = ({ active, onClick, icon: Icon, label }) => (
-  <button 
+  <button
     onClick={onClick}
     className="group flex flex-col items-center gap-1 min-w-[3.5rem]"
   >
     <div className={`p-2 rounded-xl transition-all duration-300 ${active ? 'bg-[#18181b] text-white shadow-lg shadow-[#18181b]/20 transform -translate-y-1' : 'text-gray-300 group-hover:text-[#18181b] group-hover:bg-gray-50'}`}>
-       <Icon size={20} strokeWidth={active ? 2.5 : 2} />
+      <Icon size={20} strokeWidth={active ? 2.5 : 2} />
     </div>
     <span className={`text-[9px] font-bold tracking-widest uppercase transition-colors ${active ? 'text-[#18181b]' : 'text-transparent group-hover:text-gray-300'}`}>{label}</span>
   </button>
 );
 
+import { AuthWrapper } from './components/AuthWrapper';
+
 const App: React.FC = () => {
   return (
     <FinanceProvider>
-      <AppContent />
+      <AuthWrapper>
+        <AppContent />
+      </AuthWrapper>
     </FinanceProvider>
   );
 };
