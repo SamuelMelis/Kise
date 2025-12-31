@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useFinance } from '../context/FinanceContext';
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, AreaChart, Area } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 import { CATEGORIES } from '../constants';
-import { TrendingUp, TrendingDown, Filter, Calendar } from 'lucide-react';
+import { TrendingUp, Calendar } from 'lucide-react';
 
 // Sophisticated Palette for "A Bit of Color"
 // Obsidian, Electric Blue, Teal, Amber, Violet, Rose
@@ -16,7 +16,7 @@ export const ReportsTab: React.FC = () => {
   const categoryData = CATEGORIES.map(cat => {
     const total = expenses
       .filter(e => e.category === cat.value)
-      .reduce((sum, e) => sum + e.amountETB, 0);
+      .reduce((sum, e) => sum + e.amount, 0);
     return { name: cat.label, value: total };
   }).filter(item => item.value > 0).sort((a, b) => b.value - a.value);
 
@@ -29,21 +29,21 @@ export const ReportsTab: React.FC = () => {
   }).reverse().map(date => {
     const total = expenses
       .filter(e => e.date === date)
-      .reduce((sum, e) => sum + e.amountETB, 0);
+      .reduce((sum, e) => sum + e.amount, 0);
     const dateObj = new Date(date);
-    return { 
-      name: viewPeriod === 'Week' ? dateObj.toLocaleDateString('en-US', { weekday: 'short' }) : dateObj.getDate().toString(), 
+    return {
+      name: viewPeriod === 'Week' ? dateObj.toLocaleDateString('en-US', { weekday: 'short' }) : dateObj.getDate().toString(),
       fullDate: date,
-      amount: total 
+      amount: total
     };
   });
 
-  const totalSpent = expenses.reduce((acc, curr) => acc + curr.amountETB, 0);
+  const totalSpent = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   const avgDaily = totalSpent / (expenses.length > 0 ? new Set(expenses.map(e => e.date)).size : 1);
 
   return (
     <div className="space-y-8 pb-32 animate-in fade-in duration-500">
-      
+
       {/* Header */}
       <div className="pt-2 flex justify-between items-end">
         <div>
@@ -51,15 +51,15 @@ export const ReportsTab: React.FC = () => {
           <p className="text-sm text-gray-500 font-medium">Spending insights & trends</p>
         </div>
         <div className="flex bg-gray-100 p-1 rounded-xl">
-          <button 
+          <button
             onClick={() => setViewPeriod('Week')}
             className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${viewPeriod === 'Week' ? 'bg-white text-[#18181b] shadow-sm' : 'text-gray-400'}`}
           >
             7D
           </button>
-          <button 
-             onClick={() => setViewPeriod('Month')}
-             className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${viewPeriod === 'Month' ? 'bg-white text-[#18181b] shadow-sm' : 'text-gray-400'}`}
+          <button
+            onClick={() => setViewPeriod('Month')}
+            className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${viewPeriod === 'Month' ? 'bg-white text-[#18181b] shadow-sm' : 'text-gray-400'}`}
           >
             30D
           </button>
@@ -68,27 +68,27 @@ export const ReportsTab: React.FC = () => {
 
       {/* Top Level Summary Cards */}
       <div className="grid grid-cols-2 gap-4">
-         <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100">
-            <div className="flex items-center gap-2 mb-2">
-               <div className="p-1.5 bg-blue-100 rounded-md text-blue-600">
-                  <TrendingUp size={16} />
-               </div>
-               <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Lifetime</span>
+        <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="p-1.5 bg-blue-100 rounded-md text-blue-600">
+              <TrendingUp size={16} />
             </div>
-            <div className="text-xl font-bold text-[#18181b] tracking-tight">{totalSpent.toLocaleString()}</div>
-            <div className="text-[10px] font-medium text-gray-400 mt-1">Total ETB Spent</div>
-         </div>
+            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Lifetime</span>
+          </div>
+          <div className="text-xl font-bold text-[#18181b] tracking-tight">{totalSpent.toLocaleString()}</div>
+          <div className="text-[10px] font-medium text-gray-400 mt-1">Total ETB Spent</div>
+        </div>
 
-         <div className="bg-emerald-50 p-5 rounded-2xl border border-emerald-100">
-            <div className="flex items-center gap-2 mb-2">
-               <div className="p-1.5 bg-emerald-100 rounded-md text-emerald-600">
-                  <Calendar size={16} />
-               </div>
-               <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Daily Avg</span>
+        <div className="bg-emerald-50 p-5 rounded-2xl border border-emerald-100">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="p-1.5 bg-emerald-100 rounded-md text-emerald-600">
+              <Calendar size={16} />
             </div>
-            <div className="text-xl font-bold text-[#18181b] tracking-tight">{Math.round(avgDaily).toLocaleString()}</div>
-            <div className="text-[10px] font-medium text-gray-400 mt-1">ETB / Day</div>
-         </div>
+            <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Daily Avg</span>
+          </div>
+          <div className="text-xl font-bold text-[#18181b] tracking-tight">{Math.round(avgDaily).toLocaleString()}</div>
+          <div className="text-[10px] font-medium text-gray-400 mt-1">ETB / Day</div>
+        </div>
       </div>
 
       {/* Spending Breakdown (Pie Chart) */}
@@ -96,7 +96,7 @@ export const ReportsTab: React.FC = () => {
         <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-6 flex items-center gap-2">
           Category Allocation
         </h3>
-        
+
         {categoryData.length > 0 ? (
           <>
             <div className="h-64 w-full relative">
@@ -114,14 +114,14 @@ export const ReportsTab: React.FC = () => {
                     cornerRadius={6}
                   >
                     {categoryData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={COLORS[index % COLORS.length]} 
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
                         className="stroke-white stroke-2"
                       />
                     ))}
                   </Pie>
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', backgroundColor: 'white', color: '#18181b', padding: '12px' }}
                     itemStyle={{ color: '#18181b', fontWeight: 'bold', fontSize: '12px' }}
                     formatter={(value: number) => [`${value.toLocaleString()} ETB`, '']}
@@ -134,7 +134,7 @@ export const ReportsTab: React.FC = () => {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Cats</span>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-x-4 gap-y-3 mt-6">
               {categoryData.map((entry, index) => (
                 <div key={entry.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
@@ -157,40 +157,40 @@ export const ReportsTab: React.FC = () => {
       {/* Spend Trend (Bar/Area Chart) */}
       <section className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
         <div className="flex justify-between items-center mb-6">
-           <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest">Spending Trend</h3>
-           <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-md">ETB</span>
+          <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest">Spending Trend</h3>
+          <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-md">ETB</span>
         </div>
-        
+
         <div className="h-48 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={trendData} barSize={viewPeriod === 'Week' ? 32 : 8}>
               <defs>
                 <linearGradient id="colorBar" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#18181b" stopOpacity={1}/>
-                  <stop offset="100%" stopColor="#3f3f46" stopOpacity={0.8}/>
+                  <stop offset="0%" stopColor="#18181b" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#3f3f46" stopOpacity={0.8} />
                 </linearGradient>
               </defs>
-              <XAxis 
-                dataKey="name" 
-                fontSize={10} 
-                tickLine={false} 
-                axisLine={false} 
+              <XAxis
+                dataKey="name"
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
                 tick={{ fill: '#9ca3af', fontWeight: 600 }}
                 dy={10}
                 interval={viewPeriod === 'Month' ? 5 : 0}
               />
               <YAxis hide />
-              <Tooltip 
+              <Tooltip
                 cursor={{ fill: '#f3f4f6', radius: 6 }}
                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', backgroundColor: '#18181b', color: 'white' }}
                 itemStyle={{ color: 'white', fontWeight: 'bold' }}
                 formatter={(value: number) => [`${value} ETB`, '']}
                 labelStyle={{ color: '#9ca3af', marginBottom: '4px', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}
               />
-              <Bar 
-                dataKey="amount" 
-                fill="url(#colorBar)" 
-                radius={[6, 6, 6, 6]} 
+              <Bar
+                dataKey="amount"
+                fill="url(#colorBar)"
+                radius={[6, 6, 6, 6]}
               />
             </BarChart>
           </ResponsiveContainer>
