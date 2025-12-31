@@ -45,6 +45,44 @@
 </head>
 
 <body class="bg-white text-[#18181b]">
+  <!-- Diagnostic Error Overlay -->
+  <script>
+    window.onerror = function (msg, url, line, col, error) {
+      var div = document.createElement('div');
+      div.style.position = 'fixed';
+      div.style.top = '0';
+      div.style.left = '0';
+      div.style.width = '100%';
+      div.style.padding = '20px';
+      div.style.backgroundColor = '#fef2f2';
+      div.style.color = '#991b1b';
+      div.style.borderBottom = '1px solid #fee2e2';
+      div.style.zIndex = '999999';
+      div.style.fontSize = '12px';
+      div.style.fontFamily = 'monospace';
+      div.style.boxSizing = 'border-box';
+      div.innerHTML = '<strong>App Error:</strong> ' + msg + '<br>@ ' + url + ':' + line + ':' + col;
+      document.body.appendChild(div);
+      return false;
+    };
+    window.onunhandledrejection = function (event) {
+      var div = document.createElement('div');
+      div.style.position = 'fixed';
+      div.style.bottom = '0';
+      div.style.left = '0';
+      div.style.width = '100%';
+      div.style.padding = '10px';
+      div.style.backgroundColor = '#fff7ed';
+      div.style.color = '#c2410c';
+      div.style.borderTop = '1px solid #ffedd5';
+      div.style.zIndex = '999999';
+      div.style.fontSize = '10px';
+      div.style.fontFamily = 'monospace';
+      div.innerHTML = '<strong>Uncaught Promise:</strong> ' + (event.reason ? event.reason.message || event.reason : 'Unknown error');
+      document.body.appendChild(div);
+    };
+  </script>
+
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>

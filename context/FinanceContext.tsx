@@ -30,51 +30,52 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
 
     const loadData = async () => {
+      console.log("NomadFinance: Loading data for user...", userId);
       setIsLoading(true);
       try {
-        // Fetch Expenses
-        const { data: expData } = await supabase
-          .from('expenses')
-          .select('*')
-          .eq('user_id', userId)
-          .order('date', { ascending: false });
-        if (expData) setExpenses(expData.map(e => ({ ...e, id: e.id.toString(), amount: Number(e.amount) })));
+        // Parallel fetch for speed
+        const [expensesRes, incomesRes, assetsRes, settingsRes] = await Promise.all([
+          supabase.from('expenses').select('*').eq('user_id', userId).order('date', { ascending: false }),
+          supabase.from('incomes').select('*').eq('user_id', userId).order('date', { ascending: false }),
+          supabase.from('assets').select('*').eq('user_id', userId),
+          supabase.from('settings').select('*').eq('user_id', userId).single()
+        ]);
 
-        // Fetch Incomes
-        const { data: incData } = await supabase
-          .from('incomes')
-          .select('*')
-          .eq('user_id', userId)
-          .order('date', { ascending: false });
-        if (incData) setIncomes(incData.map(i => ({ ...i, id: i.id.toString(), amount: Number(i.amount) })));
+        if (expensesRes.data) {
+          setExpenses(expensesRes.data.map(e => ({ ...e, id: e.id.toString(), amount: Number(e.amount) })));
+        }
 
-        // Fetch Assets
-        const { data: assetData } = await supabase
-          .from('assets')
-          .select('*')
-          .eq('user_id', userId);
-        if (assetData) setAssets(assetData.map(a => ({ ...a, id: a.id.toString(), amount: Number(a.amount) })));
+        if (incomesRes.data) {
+          setIncomes(incomesRes.data.map(i => ({ ...i, id: i.id.toString(), amount: Number(i.amount) })));
+        }
 
-        // Fetch Settings
-        const { data: settingsData } = await supabase
-          .from('settings')
-          .select('*')
-          .eq('user_id', userId)
-          .single();
-        if (settingsData) {
-          const loadedSettings = { ...settingsData, monthly_budget: Number(settingsData.monthly_budget) };
+        if (assetsRes.data) {
+          setAssets(assetsRes.data.map(a => ({ ...a, id: a.id.toString(), amount: Number(a.amount) })));
+        }
+
+        if (settingsRes.data) {
+          const loadedSettings = {
+            ...INITIAL_SETTINGS,
+            ...settingsRes.data,
+            monthly_budget: Number(settingsRes.data.monthly_budget || 1000)
+          };
           setSettings(loadedSettings);
 
-          // Migration: Update legacy 115 rate to new 180 default for existing users
+          // Migration: Update legacy 115 rate to new 180 default
           if (loadedSettings.exchangeRate === 115.0) {
+            console.log("NomadFinance: Migrating legacy exchange rate 115 -> 180");
             updateSettings({ exchangeRate: 180.0 });
           }
-        } else {
-          await supabase.from('settings').upsert({ user_id: userId, ...INITIAL_SETTINGS }); // Init settings if missing
+        } else if (settingsRes.error && settingsRes.error.code === 'PGRST116') {
+          console.log("NomadFinance: No settings found, initializing default...");
+          await supabase.from('settings').upsert({ user_id: userId, ...INITIAL_SETTINGS });
+          setSettings(INITIAL_SETTINGS);
+        } else if (settingsRes.error) {
+          console.error("NomadFinance: Settings fetch error:", settingsRes.error);
         }
 
       } catch (error) {
-        console.error('Error loading data:', error);
+        console.error('NomadFinance: Critical error during data load:', error);
       } finally {
         setIsLoading(false);
       }
