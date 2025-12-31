@@ -92,7 +92,7 @@ export const ExpensesTab: React.FC = () => {
           <span className="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center">
             <Plus size={14} />
           </span>
-          Record Transaction
+          Add Expense
         </button>
       )}
 
@@ -189,8 +189,8 @@ export const ExpensesTab: React.FC = () => {
                 )}
               </div>
 
-              <button type="submit" className="w-full bg-gradient-to-br from-[#18181b] to-[#27272a] text-white py-5 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-gray-900 transition-colors shadow-xl">
-                Save Entry
+              <button type="submit" className="w-full bg-gradient-to-br from-[#18181b] to-[#27272a] text-white py-5 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-gray-900 transition-colors shadow-xl mb-16">
+                Add Expense
               </button>
             </form>
           </div>
